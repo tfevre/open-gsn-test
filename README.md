@@ -30,3 +30,9 @@ to subsidize gas fees for new users during the onboarding process.
 GSNv3 integration tutorial: https://docs.opengsn.org/tutorials
 
 Documentation explaining how everything works: https://docs.opengsn.org/
+
+
+terminal 1 : yarn gsn-with-ganache
+terminal 2 : yarn start
+
+checker le cosole log du localhost
