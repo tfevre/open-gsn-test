@@ -11,15 +11,20 @@
 <h2>GSNv3 Test App</h2>
 
 <script>
-    window.app.initContract().then(function ({contractAddress, network}) {
-        console.log('CaptureTheFlag contract', contractAddress)
-        console.log(`identified network: ${JSON.stringify(network)}`)
-        document.getElementById('capture_button').disabled = false
-    })
+    window.app.initContract()
+    // .then(function ({contractAddress, network}) {
+    //     console.log('CaptureTheFlag contract', contractAddress)
+    //     console.log(`identified network: ${JSON.stringify(network)}`)
+    //     document.getElementById('capture_button').disabled = false
+    // })
 </script>
 
-<button id="capture_button" disabled onClick="window.app.contractCall()">
-    Capture the flag
+<button id="capture_button" disabled onClick="window.app.gaslessContractCall()">
+    Capture the flag (GasLess)
+</button>
+
+<button id="capture_button" disabled onClick="window.app.defaultContractCall()">
+    Capture the flag (Default)
 </button>
 
 <hr>

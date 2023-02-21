@@ -18,8 +18,8 @@
     "gsn-with-ganache": "yarn run ganache-cli -d --networkId 1337 --chainId 1337 'gsn start'",
     "test": "truffle test",
     "compile": "truffle compile",
-    "build": "./ui/build.sh",
-    "start": "truffle deploy && yarn build && yarn serve ./build/html"
+    "build": "browserify ./ui/index.js -o  ./build/html/bundle.js",
+    "start": "truffle deploy --networkId 5 && yarn build && yarn serve ./build/html"
   },
   "author": "Dror Tirosh",
   "license": "GPL"

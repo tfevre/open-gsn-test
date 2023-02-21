@@ -23,6 +23,7 @@ async function initContract() {
         window.location.reload()
     })
     const networkId = await window.ethereum.request({method: 'net_version'})
+    console.log(paymasterAddress)
 
     gsnProvider = await RelayProvider.newProvider({
         provider: window.ethereum,
@@ -31,7 +32,7 @@ async function initContract() {
             paymasterAddress
         }
     }).init()
-
+    
     provider = new ethers.providers.Web3Provider(gsnProvider)
 
     const network = await provider.getNetwork()
@@ -46,15 +47,36 @@ async function initContract() {
     return {contractAddress, network}
 }
 
-async function contractCall() {
-    await window.ethereum.send('eth_requestAccounts')
+async function gaslessContractCall() {
+    console.log(await window.ethereum.request({method: 'eth_requestAccounts'}))
 
     const txOptions = {gasPrice: await provider.getGasPrice()}
-    const transaction = await theContract.captureTheFlag(txOptions)
-    const hash = transaction.hash
-    console.log(`Transaction ${hash} sent`)
-    const receipt = await transaction.wait()
-    console.log(`Mined in block: ${receipt.blockNumber}`)
+    console.log(txOptions);
+
+    const transaction = await theContract.captureTheFlag()
+    // const hash = transaction.hash
+    // console.log(`Transaction ${hash} sent`)
+    // const receipt = await transaction.wait()
+    // console.log(`Mined in block: ${receipt.blockNumber}`)
+}
+
+async function defaultContractCall() {
+    const networkId = await window.ethereum.request({method: 'net_version'})
+    let provider2 = new ethers.providers.Web3Provider(window.ethereum);
+    console.log(await window.ethereum.request({method: 'eth_requestAccounts'}))
+
+    const artifactNetwork = contractArtifact.networks[networkId]
+    if (!artifactNetwork)
+        throw new Error('Can\'t find deployment on network ' + networkId)
+    const contractAddress = artifactNetwork.address
+    theContract = new ethers.Contract(
+        contractAddress, contractAbi, provider2.getSigner())
+
+    const transaction = await theContract.captureTheFlag()
+    // const hash = transaction.hash
+    // console.log(`Transaction ${hash} sent`)
+    // const receipt = await transaction.wait()
+    // console.log(`Mined in block: ${receipt.blockNumber}`)
 }
 
 let logview
@@ -77,7 +99,8 @@ async function listenToEvents() {
 
 window.app = {
     initContract,
-    contractCall,
+    defaultContractCall,
+    gaslessContractCall,
     log
 }
 
